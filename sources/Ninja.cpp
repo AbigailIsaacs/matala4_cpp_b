@@ -14,6 +14,7 @@ namespace ariel{
         Point p = Point::moveTowards(this->getLocation(),enemy->getLocation(),this->get_speed());
         this->setLocation(p);
     }
+    
     void Ninja::slash(Character* enemy){
         
         if(this->isAlive()==false) {
@@ -25,17 +26,11 @@ namespace ariel{
         if(this==enemy){
             throw runtime_error("No self harm");
         }
-        if(enemy->isAlive() == false){
-            throw runtime_error("Enamy is already dead");
-            
-        }
+     
         if(this->isAlive()){
-            if(this->getLocation().distance(enemy->getLocation())<=1){
-            enemy->hit(40);
+            if((this->distance(enemy))<1){
+                enemy->hit(40);
             }
-        }
-        else{
-
         }
         
     } 

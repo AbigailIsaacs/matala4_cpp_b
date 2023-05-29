@@ -29,7 +29,7 @@ namespace ariel{
             void set_leader(Character* new_leader);
             std::vector<Character*> get_characters();            
             
-            Character* fined_closest_to(Character* org, Team team);
+            Character* fined_closest_to(Character* org, Team *team);
 
             // Clean up memory
             virtual ~Team();

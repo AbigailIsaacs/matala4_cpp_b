@@ -40,15 +40,14 @@ namespace ariel{
             throw runtime_error("Cowboy is already dead");
             return ;
         }
-        
         num_bullets = 6 ;
         
     }    
     int Cowboy::get_num_bullets(){
         return num_bullets;
     }
-      std::string Cowboy::print(){
-        std::string s ;
+    string Cowboy::print(){
+        string s ;
         if(this->isAlive()){
             s = "name: " + this->getName() +" hit points: "+ to_string(this->get_hit_points()) + " point at: " + this->getLocation().print();
         }

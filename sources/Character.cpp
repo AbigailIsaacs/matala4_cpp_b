@@ -9,7 +9,6 @@ using namespace std ;
 namespace ariel{
 
     Character::Character (std::string _name, Point _point, int _hit_points):name(_name) , point(_point), hit_points(_hit_points){
-    
     }
     bool Character::isAlive(){
         if(hit_points==0){
@@ -18,8 +17,7 @@ namespace ariel{
         return true;
     }
 
-    double Character::distance (Character *outher){
-       
+    double Character::distance (const Character *outher){  
         return this->point.distance(outher->point);
     }
 

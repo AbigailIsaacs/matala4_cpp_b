@@ -9,18 +9,16 @@
 namespace ariel{
     class Point {
         private:
-        double x_cord;
-        double y_cord;
+            double x_cord;
+            double y_cord;
     
         public:
             Point(double x_cord,double y_cord);
-            double distance (const Point &p);
+            double distance (const Point &p) const;
             std::string print();
-            static Point moveTowards (Point p1, Point p2, double distance);
-            double get_x ();
-            double get_y ();
+            static Point moveTowards(Point p1, Point p2, double distance);
             friend bool operator==(const Point& p1,const Point& p2);
-            void set_point(Point p);
+           
             
     };
 }

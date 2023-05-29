@@ -26,8 +26,8 @@ namespace ariel{
         if(newcaracter->get_isPlaying()){
             throw runtime_error("A player cant play in two teams");
         }
-        newcaracter->set_isPlaying(true);
         if(size_vector <10){
+            newcaracter->set_isPlaying(true);
             characters.push_back(newcaracter);
             size_vector  = size_vector +1;
         }
@@ -36,13 +36,13 @@ namespace ariel{
         }
     }
 
-    Character* Team::fined_closest_to(Character* org, Team team){
+    Character* Team::fined_closest_to(Character* org, Team *team){
         
         
         bool one_iter = true;
         double min_dis;
         Character* closest_char = NULL;
-        for(Character* c : team.get_characters()){
+        for(Character* c : team->get_characters()){
            
             if(c->isAlive()){
                 if(one_iter){
@@ -68,28 +68,34 @@ namespace ariel{
         if(Team_b==NULL){
             throw invalid_argument ("Team_b is null");
         }
-        if(this->get_leader()->isAlive()==false){
-           this->leader = fined_closest_to(this->leader, *this);
+        if(Team_b->stillAlive()==0){
+            throw runtime_error ("Team_b is dead");
+        }
+        if(this->stillAlive()==0){
+            throw runtime_error ("Attack Team is dead");
+        }
+        if(leader->isAlive()==false){
+           leader = fined_closest_to(leader, this);
            if (this->leader==NULL){
                 cout<<"attack is over no living solgers IN ATTACK TEAM"<<endl;
                 return ;
            }
         }
-        Character* victom = fined_closest_to(this->leader,*Team_b);
+        Character* victom = fined_closest_to(leader,Team_b);
         if (victom==NULL){
                 cout<<"attack is over no living solgers IN TEAM B"<<endl;
                 return ;
            }
         
         for(Character* c : characters){
-            Cowboy *cowboy = dynamic_cast<Cowboy *>(c);
-             //its a Cowboy
-            if (cowboy != NULL){
+            auto &temp1 = *c;
+            if(typeid(temp1)==typeid(Cowboy)){
+                Cowboy *cowboy = dynamic_cast<Cowboy *>(c);
                 if(cowboy->isAlive()){
                     if(cowboy->hasboolets()){
                         cowboy->shoot(victom);
                         if(victom->isAlive()==false){
-                            victom = fined_closest_to(this->leader,*Team_b);
+                            victom = fined_closest_to(this->leader,Team_b);
                             if (victom==NULL){
                                     cout<<"attack is over no living solgers IN TEAM B"<<endl;
                                     return ;
@@ -100,18 +106,18 @@ namespace ariel{
                         cowboy->reload();
                     } 
                 }
-                
             }
                    
         }
         for(Character* c : characters){
-            Ninja* ninja = dynamic_cast<Ninja*>(c) ;//its a Ninja
-            if (ninja!=NULL){
+            auto &temp2 = *c;
+            if(typeid(temp2)==typeid(TrainedNinja)||typeid(temp2)==typeid(OldNinja)||typeid(temp2)==typeid(YoungNinja)){
+                Ninja *ninja = dynamic_cast<Ninja *>(c) ;//its a Ninja
                 if(ninja->isAlive()){
-                    if(ninja->distance(victom)<=1){
+                    if(ninja->distance(victom)<1){
                         ninja->slash(victom);
                         if(victom->isAlive()==false){
-                            victom = fined_closest_to(this->leader,*Team_b);
+                            victom = fined_closest_to(this->leader,Team_b);
                             if (victom==NULL){
                                     cout<<"attack is over no living solgers IN TEAM B"<<endl;
                                     return ;
@@ -122,15 +128,14 @@ namespace ariel{
                         ninja->move(victom);
                     }   
                 }
+                
             }
         }
     }
-    
-
     int Team::stillAlive(){
         int count = 0;
         for(Character* c : characters){
-            if(c->get_hit_points() >0){
+            if(c->isAlive()){
                 count++;
             }
         }
@@ -139,15 +144,21 @@ namespace ariel{
 
     void Team::print(){
         for(Character* c : characters){
-            Cowboy* cowboy = dynamic_cast<Cowboy*>(c); //its a Cowboy
-            if (cowboy!=NULL) { //its a Cowboy
-                cout<< c->print()<<endl;
+            auto &temp = *c;
+            if(typeid(temp)==typeid(Cowboy)){
+                Cowboy* cowboy = dynamic_cast<Cowboy*>(c); //its a Cowboy
+                if (cowboy!=NULL) { //its a Cowboy
+                    cout<< c->print()<<endl;
+                }
             }
         }
         for(Character* c : characters){
-            Ninja* ninja = dynamic_cast<Ninja*>(c); //its a Cowboy
-            if (ninja!=NULL){  
-                cout<< c->print()<<endl;
+            auto &temp2 = *c;
+            if(typeid(temp2)==typeid(Ninja)){
+                Ninja* ninja = dynamic_cast<Ninja*>(c); //its a Cowboy
+                if (ninja!=NULL){  
+                    cout<< c->print()<<endl;
+                }
             }
         }
     
@@ -165,7 +176,7 @@ namespace ariel{
          for (Character* character : characters) {
                 delete character;
             }
-        characters.clear();
+        
 
      }
            
